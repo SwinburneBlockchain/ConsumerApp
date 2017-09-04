@@ -1,4 +1,4 @@
-package com.johnhumphrys.consumerapp;
+package com.swinblockchain.consumerapplication;
 
 import org.junit.Test;
 

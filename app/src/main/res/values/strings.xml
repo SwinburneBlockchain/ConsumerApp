@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">ConsumerApp</string>
+    <string name="app_name">ConsumerApplication</string>
+    <string name="scanProduct">Scan Product</string>
+    <string name="simulateScan">Simulate Scan</string>
 </resources>
