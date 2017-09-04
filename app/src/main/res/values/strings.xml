@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ConsumerApplication</string>
     <string name="scanProduct">Scan Product</string>
-    <string name="simulateScan">Simulate Scan</string>
+    <string name="simulateScan">Simulate QR Code Scan</string>
+    <string name="queryBlockchain">Querying Foodchain...</string>
+    <string name="result">Results:</string>
 </resources>
