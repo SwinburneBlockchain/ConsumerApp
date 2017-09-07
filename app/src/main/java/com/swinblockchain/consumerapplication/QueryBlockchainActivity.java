@@ -5,12 +5,20 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static android.text.TextUtils.concat;
+
 
 // TODO refactor and clean up entire class
 
@@ -32,17 +40,13 @@ public class QueryBlockchainActivity extends AppCompatActivity {
 
         init();
 
-        /*
-        JsonObject jsonResponse = null;
-        try {
-            objectResponse = Json.parse(testQueryBlockchain(accNo)).asObject();
-        } catch (ParseException pe) {
-            System.out.println("Could not parse reponse to JsonObject...");
-        }
-        String stringResponse = objectResponse.getString("message", "Error");
+        String returnedJsonString = testQueryBlockchain(accNo);
 
-        displayResults(jsonResponse);
-        */
+        JsonArray returnedJsonArray = stringToJsonArray(returnedJsonString);
+
+        String results = printTransactions(returnedJsonArray, "001");
+
+        displayResults(results);
     }
 
     private void init() {
@@ -52,9 +56,10 @@ public class QueryBlockchainActivity extends AppCompatActivity {
         batchID = i.getStringExtra("batchID");
     }
 
-    private void displayResults(JSONObject jsonResponse) {
+    private void displayResults(String results) {
         Intent i = new Intent(QueryBlockchainActivity.this, InformationActivity.class);
-        i.putExtra("result", jsonResponse);
+
+        i.putExtra("results", results);
         startActivity(i);
     }
 
@@ -120,6 +125,59 @@ public class QueryBlockchainActivity extends AppCompatActivity {
 
         System.out.println("Response: " + response.toString());
         return response.toString();
+    }
+
+    private JsonArray stringToJsonArray(String stringResponse) {
+        JsonValue jsonResponse;
+
+        try {
+            // Parses the string response into a JsonValue
+            jsonResponse = Json.parse(stringResponse);
+            // Converts the JsonValue into an Object
+            JsonObject objectResponse = jsonResponse.asObject();
+            // Gets the JsonArray at item 'transactions' within JsonObject
+            JsonArray arrayResponse = objectResponse.get("transactions").asArray();
+            // Returns JsonArray
+            return arrayResponse;
+        } catch (Exception e) {
+            System.out.println("Could not parse response to JsonArray...");
+        }
+        return null;
+    }
+
+    private String printTransactions(JsonArray responseArray, String batchID) { // TODO This function belongs in InformationActivity
+        String results = "";
+
+        for(JsonValue value : responseArray) {
+            //Bit complicated... Converting the JsonValue from JsonArray into a JsonObject
+            //Then getting the nested "attachment" value as an object
+            JsonObject object = value.asObject().get("attachment").asObject();
+
+            String timestamp = value.asObject().get("timestamp").toString();
+
+            //From this response, we're getting the "message" value
+            String message = object.getString("message", "unavailable");
+
+            JsonObject messageObj = null;
+
+            try {
+                //Converts the string 'message' which is like a json within a json to JsonObject
+                messageObj = Json.parse(message).asObject();
+
+                //Checking if the 'batchID' in the JsonObject is the one we're looking for
+                if(messageObj.getString("batchID", "unavailable").equals(batchID)) {
+                    results = results.concat("-------------\n");
+                    results = results.concat("BatchID: " + messageObj.getString("batchID", "error") + "\n");
+                    results = results.concat("Timestamp: " + timestamp + "\n");
+                    results = results.concat("Quantity: " + messageObj.getString("quantity", "error") + "\n");
+                    results = results.concat("Location: " + messageObj.getString("location", "error") + "\n");
+                    results = results.concat("\n\n");
+                }
+            } catch (Exception pe) {
+                pe.printStackTrace();
+            }
+        }
+        return results;
     }
 
 }
