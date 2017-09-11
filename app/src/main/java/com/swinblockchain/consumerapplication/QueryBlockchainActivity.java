@@ -44,7 +44,7 @@ public class QueryBlockchainActivity extends AppCompatActivity {
 
         JsonArray returnedJsonArray = stringToJsonArray(returnedJsonString);
 
-        String results = printTransactions(returnedJsonArray, "001");
+        String results = printTransactions(returnedJsonArray, batchID);
 
         displayResults(results);
     }
@@ -72,27 +72,27 @@ public class QueryBlockchainActivity extends AppCompatActivity {
      */
     public String testQueryBlockchain(String accNo) {
 
-            System.out.println("Testing 1 - Send Http GET request");
-            try {
+        System.out.println("Testing 1 - Send Http GET request");
+        try {
 
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                // Check if the Android SDK supports the Threadpolicy
-                if (SDK_INT > 8) {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    // Query blockchain
-                    return getFromBlockchain();
+            int SDK_INT = android.os.Build.VERSION.SDK_INT;
+            // Check if the Android SDK supports the Threadpolicy
+            if (SDK_INT > 8) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                // Query blockchain
+                return getFromBlockchain();
 
-                } else {
-                    System.out.println("Error: SDK_INT < 8");
-                    return "Error"; // TODO // FIXME: 5/9/17
-                }
-
-            } catch (Exception e) { // TODO // FIXME: 5/9/17
-                e.printStackTrace();
+            } else {
+                System.out.println("Error: SDK_INT < 8");
+                return "Error"; // TODO // FIXME: 5/9/17
             }
-            return "Error"; // TODO // FIXME: 5/9/17
+
+        } catch (Exception e) { // TODO // FIXME: 5/9/17
+            e.printStackTrace();
         }
+        return "Error"; // TODO // FIXME: 5/9/17
+    }
 
     /**
      * Used to query the blockchain and returns the JSON object
