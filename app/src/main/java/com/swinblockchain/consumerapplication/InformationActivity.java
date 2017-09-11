@@ -33,4 +33,12 @@ public class InformationActivity extends AppCompatActivity {
     // TODO move printTransactions back in here
 
 
+    /**
+     * On back pressed sends the user to the main activity to prevent unexpected results
+     */
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(InformationActivity.this, MainActivity.class);
+        startActivity(i);
+    }
 }

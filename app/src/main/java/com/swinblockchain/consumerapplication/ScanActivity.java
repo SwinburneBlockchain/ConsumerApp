@@ -33,11 +33,18 @@ public class ScanActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
+        if (scanningResult.getContents().toString().split(",").length == 2) {
+            accNo = scanningResult.getContents().toString().split(",")[0];
+            batchID = scanningResult.getContents().toString().split(",")[1];
+        } else {
+            accNo = "Error, not a valid QR code";
+            batchID = "";
+            changeActivity(accNo, batchID);
+        }
         // Get variables
-        accNo = scanningResult.getContents().toString().split(",")[0];
-        batchID = scanningResult.getContents().toString().split(",")[1];
 
-        changeActivity(accNo, batchID);
+
+
     }
 
     /**
@@ -66,6 +73,15 @@ public class ScanActivity extends AppCompatActivity {
         i.putExtra("accNo", accNo);
         i.putExtra("batchID", batchID);
 
+        startActivity(i);
+    }
+
+    /**
+     * On back pressed sends the user to the main activity to prevent unexpected results
+     */
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ScanActivity.this, MainActivity.class);
         startActivity(i);
     }
 

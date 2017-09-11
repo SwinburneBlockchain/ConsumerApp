@@ -147,37 +147,51 @@ public class QueryBlockchainActivity extends AppCompatActivity {
 
     private String printTransactions(JsonArray responseArray, String batchID) { // TODO This function belongs in InformationActivity
         String results = "";
+        try {
+            for (JsonValue value : responseArray) {
+                //Bit complicated... Converting the JsonValue from JsonArray into a JsonObject
+                //Then getting the nested "attachment" value as an object
+                JsonObject object = value.asObject().get("attachment").asObject();
 
-        for(JsonValue value : responseArray) {
-            //Bit complicated... Converting the JsonValue from JsonArray into a JsonObject
-            //Then getting the nested "attachment" value as an object
-            JsonObject object = value.asObject().get("attachment").asObject();
+                String timestamp = value.asObject().get("timestamp").toString();
 
-            String timestamp = value.asObject().get("timestamp").toString();
+                //From this response, we're getting the "message" value
+                String message = object.getString("message", "unavailable");
 
-            //From this response, we're getting the "message" value
-            String message = object.getString("message", "unavailable");
+                JsonObject messageObj = null;
 
-            JsonObject messageObj = null;
+                try {
+                    //Converts the string 'message' which is like a json within a json to JsonObject
+                    messageObj = Json.parse(message).asObject();
 
-            try {
-                //Converts the string 'message' which is like a json within a json to JsonObject
-                messageObj = Json.parse(message).asObject();
-
-                //Checking if the 'batchID' in the JsonObject is the one we're looking for
-                if(messageObj.getString("batchID", "unavailable").equals(batchID)) {
-                    results = results.concat("-------------\n");
-                    results = results.concat("BatchID: " + messageObj.getString("batchID", "error") + "\n");
-                    results = results.concat("Timestamp: " + timestamp + "\n");
-                    results = results.concat("Quantity: " + messageObj.getString("quantity", "error") + "\n");
-                    results = results.concat("Location: " + messageObj.getString("location", "error") + "\n");
-                    results = results.concat("\n\n");
+                    //Checking if the 'batchID' in the JsonObject is the one we're looking for
+                    if (messageObj.getString("batchID", "unavailable").equals(batchID)) {
+                        results = results.concat("-------------\n");
+                        results = results.concat("BatchID: " + messageObj.getString("batchID", "error") + "\n");
+                        results = results.concat("Timestamp: " + timestamp + "\n");
+                        results = results.concat("Quantity: " + messageObj.getString("quantity", "error") + "\n");
+                        results = results.concat("Location: " + messageObj.getString("location", "error") + "\n");
+                        results = results.concat("\n\n");
+                    }
+                } catch (Exception pe) {
+                    pe.printStackTrace();
+                    results = "Error, not a valid QR code";
                 }
-            } catch (Exception pe) {
-                pe.printStackTrace();
             }
+            return results;
+        } catch (Exception e) {
+            return "Error, not a valid QR code";
         }
-        return results;
+    }
+
+
+    /**
+     * On back pressed sends the user to the main activity to prevent unexpected results
+     */
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(QueryBlockchainActivity.this, MainActivity.class);
+        startActivity(i);
     }
 
 }

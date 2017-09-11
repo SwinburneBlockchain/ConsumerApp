@@ -19,4 +19,10 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, ScanActivity.class);
         startActivity(i);
     }
+
+    /**
+     * On back pressed does nothing to prevent unexpected results
+     */
+    @Override
+    public void onBackPressed() {}
 }
