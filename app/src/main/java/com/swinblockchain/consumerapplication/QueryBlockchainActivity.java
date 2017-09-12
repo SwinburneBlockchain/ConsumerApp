@@ -14,8 +14,10 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static android.text.TextUtils.concat;
 
@@ -44,9 +46,11 @@ public class QueryBlockchainActivity extends AppCompatActivity {
 
         JsonArray returnedJsonArray = stringToJsonArray(returnedJsonString);
 
-        String results = printTransactions(returnedJsonArray, batchID);
+        ArrayList<ProductLocation> plList = createTransactions(returnedJsonArray, batchID);
 
-        displayResults(results);
+
+
+        sendToInformation(plList);
     }
 
     private void init() {
@@ -56,10 +60,11 @@ public class QueryBlockchainActivity extends AppCompatActivity {
         batchID = i.getStringExtra("batchID");
     }
 
-    private void displayResults(String results) {
+    private void sendToInformation(ArrayList<ProductLocation> plList) {
         Intent i = new Intent(QueryBlockchainActivity.this, InformationActivity.class);
-
-        i.putExtra("results", results);
+        Bundle args = new Bundle();
+        args.putSerializable("ARRAYLIST", (Serializable)plList);
+        i.putExtra("BUNDLE", args);
         startActivity(i);
     }
 
@@ -145,43 +150,62 @@ public class QueryBlockchainActivity extends AppCompatActivity {
         return null;
     }
 
-    private String printTransactions(JsonArray responseArray, String batchID) { // TODO This function belongs in InformationActivity
-        String results = "";
+    private ArrayList<ProductLocation> createTransactions(JsonArray responseArray, String batchID) { // TODO This function belongs in InformationActivity
+        ArrayList<ProductLocation> plList = new ArrayList<>();
         try {
-            for (JsonValue value : responseArray) {
+            ///for (JsonValue value : responseArray) {
                 //Bit complicated... Converting the JsonValue from JsonArray into a JsonObject
                 //Then getting the nested "attachment" value as an object
-                JsonObject object = value.asObject().get("attachment").asObject();
+                //JsonObject object = value.asObject().get("attachment").asObject();
 
-                String timestamp = value.asObject().get("timestamp").toString();
+                //String timestamp = value.asObject().get("timestamp").toString();
 
                 //From this response, we're getting the "message" value
-                String message = object.getString("message", "unavailable");
+                //String message = object.getString("message", "unavailable");
 
-                JsonObject messageObj = null;
+                //JsonObject messageObj = null;
 
                 try {
+                    /*
                     //Converts the string 'message' which is like a json within a json to JsonObject
                     messageObj = Json.parse(message).asObject();
 
                     //Checking if the 'batchID' in the JsonObject is the one we're looking for
                     if (messageObj.getString("batchID", "unavailable").equals(batchID)) {
-                        results = results.concat("-------------\n");
-                        results = results.concat("BatchID: " + messageObj.getString("batchID", "error") + "\n");
-                        results = results.concat("Timestamp: " + timestamp + "\n");
-                        results = results.concat("Quantity: " + messageObj.getString("quantity", "error") + "\n");
-                        results = results.concat("Location: " + messageObj.getString("location", "error") + "\n");
-                        results = results.concat("\n\n");
-                    }
+
+                        String productName = messageObj.getString("productName", "error");
+                        String batchIDForObject = messageObj.getString("batchID", "error");
+                        String date = messageObj.getString("date", "error");
+                        String regBy = messageObj.getString("regBy", "error");
+                        String location = messageObj.getString("location", "error");
+
+                        ProductLocation pl = new ProductLocation(productName, batchIDForObject, date, regBy, location);
+                        plList.add(pl);
+                        */
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "10/11/17", "IGA North Ringwood", "North Ringwood, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "08/11/17", "Donut sorting facility", "Geelong, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "06/11/17", "Mr Donut Factory", "Melbourne, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "10/11/17", "IGA North Ringwood", "North Ringwood, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "08/11/17", "Donut sorting facility", "Geelong, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "06/11/17", "Mr Donut Factory", "Melbourne, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "10/11/17", "IGA North Ringwood", "North Ringwood, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "08/11/17", "Donut sorting facility", "Geelong, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "06/11/17", "Mr Donut Factory", "Melbourne, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "10/11/17", "IGA North Ringwood", "North Ringwood, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "08/11/17", "Donut sorting facility", "Geelong, Victoria"));
+                    plList.add(new ProductLocation("Mr Donut Donuts", "001", "06/11/17", "Mr Donut Factory", "Melbourne, Victoria"));
+
                 } catch (Exception pe) {
                     pe.printStackTrace();
-                    results = "Error, not a valid QR code";
+                    //results = "Error, not a valid QR code";
                 }
-            }
-            return results;
+            ///}
+            //return results;
         } catch (Exception e) {
-            return "Error, not a valid QR code";
+            //return "Error, not a valid QR code";
         }
+        // Create
+        return plList;
     }
 
 
