@@ -42,8 +42,6 @@ public class QueryServerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_query_blockchain);
 
         init();
-
-        makeRequest();
     }
 
     private void init() {
@@ -64,7 +62,7 @@ public class QueryServerActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-
+                 
                 if (checkValid(response)) {
                     JsonObject jsonProduct = createJsonProduct(response);
                     ArrayList<JsonObject> jsonProducer = createJsonProducer(response);
