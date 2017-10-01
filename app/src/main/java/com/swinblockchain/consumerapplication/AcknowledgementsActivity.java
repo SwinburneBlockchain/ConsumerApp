@@ -89,7 +89,7 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         final TextView tv;
 
         tv = (TextView) tableRow.findViewById(R.id.informationCell);
-        tv.setText("  " + a.getTitle());
+        tv.setText(a.getTitle());
 
         tableRow.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
