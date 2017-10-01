@@ -44,6 +44,7 @@ public class QueryServerActivity extends AppCompatActivity {
 
     private void init() {
         s = getIntent().getParcelableExtra("scan");
+        makeRequest();
     }
 
     /**

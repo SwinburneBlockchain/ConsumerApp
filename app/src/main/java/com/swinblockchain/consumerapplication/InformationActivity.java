@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class InformationActivity extends AppCompatActivity {
 
     TextView resultTextView;
-    ArrayList<ProductLocation> plList;
+    ArrayList<Producer> prodArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +31,17 @@ public class InformationActivity extends AppCompatActivity {
 
     private void init() {
 
-        Bundle args = getIntent().getBundleExtra("BUNDLE");
-        plList = (ArrayList<ProductLocation>) args.getSerializable("ARRAYLIST");
+        ArrayList<String> prodArrayList = (ArrayList<String>) getIntent().getSerializableExtra("prodArrayList");
+
+        //s = getIntent().getParcelableExtra("scan");
+        //Bundle args = getIntent().getBundleExtra("BUNDLE");
+        //plList = (ArrayList<ProductLocation>) args.getSerializable("ARRAYLIST");
 
         //mainTableLayout = (TableLayout) findViewById(R.id.mainTableLayout);
 
         //plList = new ArrayList<>();
 
-        displayProductInformation(plList);
+        //displayProductInformation(plList);
 
 
 
