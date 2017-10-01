@@ -32,7 +32,6 @@ public class Producer implements Parcelable{
 
             return new Producer[size];
         }
-
     };
 
     public String getProducerName() {
