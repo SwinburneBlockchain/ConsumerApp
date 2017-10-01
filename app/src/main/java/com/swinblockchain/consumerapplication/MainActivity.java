@@ -20,9 +20,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void displayAck(View view) {
+        Intent i = new Intent(MainActivity.this, AcknowledgementsActivity.class);
+        startActivity(i);
+    }
+
     /**
      * On back pressed does nothing to prevent unexpected results
      */
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+
+    }
 }

@@ -51,6 +51,14 @@ public class Producer implements Parcelable{
         this.producerTimestamp = producerTimestamp;
     }
 
+    public String getProducerLocation() {
+        return producerLocation;
+    }
+
+    public void setProducerLocation(String producerLocation) {
+        this.producerLocation = producerLocation;
+    }
+
     @Override
     public int describeContents() {
         return 0;

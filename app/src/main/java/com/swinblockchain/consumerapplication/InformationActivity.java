@@ -14,12 +14,12 @@ import com.eclipsesource.json.JsonValue;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class InformationActivity extends AppCompatActivity {
 
     TextView resultTextView;
-    ArrayList<Producer> prodArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +30,10 @@ public class InformationActivity extends AppCompatActivity {
     }
 
     private void init() {
+        Product product = getIntent().getParcelableExtra("product");
+        ArrayList <Producer> prodArrayList = (ArrayList<Producer>) getIntent().getSerializableExtra("prodArrayList");
 
-        ArrayList<String> prodArrayList = (ArrayList<String>) getIntent().getSerializableExtra("prodArrayList");
+        displayProductInformation(product, prodArrayList);
 
         //s = getIntent().getParcelableExtra("scan");
         //Bundle args = getIntent().getBundleExtra("BUNDLE");
@@ -50,17 +52,17 @@ public class InformationActivity extends AppCompatActivity {
         //resultTextView.setText(i.getStringExtra("results"));
     }
 
-    private void displayProductInformation(ArrayList<ProductLocation> plList) {
+    private void displayProductInformation(Product product, ArrayList<Producer> prodArrayList) {
         // Draw the top, main window
         TextView productName = (TextView) findViewById(R.id.productName);
         TextView batchID = (TextView) findViewById(R.id.batchID);
 
-        productName.setText("Product name: " + plList.get(0).getProductName());
-        batchID.setText("Batch ID: " + plList.get(0).getBatchID());
+        productName.setText("Product name: " + product.getProductName());
+        batchID.setText("Batch ID: " + product.getBatchId());
 
         // Draw a new column for each location
-        for (ProductLocation pl : plList) {
-            createTableRow(pl);
+        for (Producer p : prodArrayList) {
+            createTableRow(p);
             // Clean up bottom of table
             createTableRowFinal();
         }
@@ -72,17 +74,16 @@ public class InformationActivity extends AppCompatActivity {
         detailsTable.addView(tableRow);
     }
 
-    private void createTableRow(ProductLocation pl) {
+    private void createTableRow(Producer p) {
 
             final TableLayout detailsTable = (TableLayout) findViewById(R.id.mainTableLayout);
             final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerow, null);
             TextView tv;
 
-            //Filling in cells
-
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
             tv = (TextView) tableRow.findViewById(R.id.informationCell);
-            tv.setText("Date: " + pl.getDate() + "\n" + "Registered by: " + pl.getRegBy() + "\n" + "Location: " + pl.getLocation());
+            tv.setText("Date: " + sdf.format(p.getProducerTimestamp()) + "\n" + "Registered by: " + p.getProducerName() + "\n" + "Location: " + p.getProducerLocation());
 
             //Add row to the table
             detailsTable.addView(tableRow);

@@ -30,7 +30,10 @@ public class QueryServerActivity extends AppCompatActivity {
 
     Scan s;
     ArrayList<Producer> prodArrayList = new ArrayList<>();
-    String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo";
+
+    private final String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo";
+    private final String BLOCKCHAIN_ACC = "NXT-HP3G-T95S-6W2D-AEPHE";
+    private final String VALID_MESSAGE = "VALIDATE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class QueryServerActivity extends AppCompatActivity {
         makeRequest();
     }
 
+
     /**
      * Create request to send to the QR code generating web server
      */
@@ -58,36 +62,38 @@ public class QueryServerActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                JsonObject returnedJsonObject = stringToJsonObject(response);
+                if (checkValid(response)) {
+                    JsonObject jsonProduct = createJsonProduct(response);
+                    ArrayList<JsonObject> jsonProducer = createJsonProducer(response);
 
-                try {
-                    // May not be required
-                    String qrAddress = returnedJsonObject.getString("qrAddress", "qrAddressError");
-                    String qrPubKey = returnedJsonObject.getString("qrPubKey", "qrPubKeyError");
-                    String producerAddr = returnedJsonObject.getString("producerAddr", "producerAddrError");
+                    try {
+                        // May not be required
+                        String qrAddress = jsonProduct.getString("qrAddress", "qrAddressError");
+                        String qrPubKey = jsonProduct.getString("qrPubKey", "qrPubKeyError");
+                        String producerAddr = jsonProduct.getString("producerAddr", "producerAddrError");
 
-                    // Single product information
-                    String productName = returnedJsonObject.getString("productName", "productNameError");
-                    String productId = returnedJsonObject.getString("productId", "productIdError");
-                    String batchId = returnedJsonObject.getString("batchId", "batchIdError");
+                        // Single product information
+                        String productName = jsonProduct.getString("productName", "productNameError");
+                        String productId = jsonProduct.getString("productId", "productIdError");
+                        String batchId = jsonProduct.getString("batchId", "batchIdError");
 
-                    //TODO fix this name
-                    JsonArray prodArray = returnedJsonObject.get("producers").asArray();
+                        Product newProduct = new Product(productName, productId, batchId);
 
-                    for (JsonValue p : prodArray) {
-                        // Each producer information
-                        String producerName = returnedJsonObject.getString("producerName", "producerNameError");
-                        String producerTimestamp = returnedJsonObject.getString("timestamp", "timestampError");
-                        String producerLocation = returnedJsonObject.getString("producerLocation", "producerLocationError");
+                        for (JsonObject p : jsonProducer) {
+                            // Each producer information
+                            String producerName = p.getString("producerName", "producerNameError");
+                            String producerTimestamp = p.getString("timestamp", "timestampError");
+                            String producerLocation = p.getString("producerLocation", "producerLocationError");
 
-                        prodArrayList.add(new Producer(producerName, producerTimestamp, producerLocation));
+                            prodArrayList.add(new Producer(producerName, producerTimestamp, producerLocation));
+                        }
+                        displayProductInformation(newProduct, prodArrayList);
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        startError("The returned data from the server is invalid.\nError Code: Data returned from server is in an unexpected form.");
                     }
-
-                    displayProductInformation();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    startError("The returned data from the server is invalid.\nError Code: Data returned from server is in an unexpected form.");
                 }
 
             }
@@ -112,10 +118,49 @@ public class QueryServerActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private void displayProductInformation() {
+    private JsonObject createJsonProduct(String response) {
+        String cleanedResponse = response.substring(1, response.length()-1);
+        String[] cleanedResponseArr = cleanedResponse.split("|");
+        return stringToJsonObject(cleanedResponseArr[0]);
+    }
+
+    private ArrayList<JsonObject> createJsonProducer(String response) {
+        String cleanedResponse = response.substring(1, response.length()-1);
+        String[] cleanedResponseArr = cleanedResponse.split("|");
+        ArrayList<JsonObject> jsonProducers = new ArrayList<>();
+
+        for (int i = 2; i < cleanedResponseArr.length; i++) {
+            jsonProducers.add(stringToJsonObject(cleanedResponseArr[i]));
+        }
+        return jsonProducers;
+    }
+
+    private boolean checkValid(String response) {
+        String cleanedResponse = response.substring(1, response.length()-1);
+        String[] cleanedResponseArr = cleanedResponse.split("|");
+        JsonObject json = stringToJsonObject(cleanedResponseArr[1]);
+
+        try {
+            String blockchainAcc = json.getString("address", "addressError");
+            String validMessage = json.getString("action", "actionError");
+
+            if (blockchainAcc.equals(BLOCKCHAIN_ACC) && validMessage.equals(VALID_MESSAGE)) {
+                return true;
+            } else {
+                startError("The product/producer information is not valid.\nError Code: Blockchain account address incorrect or invalidated.");
+                return false;
+            }
+        } catch (Exception e) {
+            startError("The product/producer information is not valid.\nError Code: Blockchain account address incorrect or invalidated.");
+            return false;
+        }
+    }
+
+    private void displayProductInformation(Product newProduct, ArrayList<Producer> producerList) {
         Intent i = new Intent(QueryServerActivity.this, InformationActivity.class);
 
-        i.putParcelableArrayListExtra("prodArrayList", prodArrayList);
+        i.putExtra("product", newProduct);
+        i.putParcelableArrayListExtra("prodArrayList", producerList);
         startActivity(i);
     }
 
@@ -140,10 +185,6 @@ public class QueryServerActivity extends AppCompatActivity {
             startError("The scanned QR code is not valid.\nError Code: Cannot convert QR code to JSON object");
         }
         return null;
-    }
-
-    private void displayProductInformation(String qrAddress, String qrPubKey, String producerAddr, String productName, String productId, String batchId) {
-
     }
 
     /**

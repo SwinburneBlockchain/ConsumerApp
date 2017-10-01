@@ -9,17 +9,11 @@ import android.os.Parcelable;
 
 public class Product implements Parcelable{
 
-    String qrAddress;
-    String qrPubKey;
-    String producerAddr;
     String productName;
     String productId;
     String batchId;
 
-    public Product(String qrAddress, String qrPubKey, String producerAddr, String productName, String productId, String batchId) {
-        this.qrAddress = qrAddress;
-        this.qrPubKey = qrPubKey;
-        this.producerAddr = producerAddr;
+    public Product(String productName, String productId, String batchId) {
         this.productName = productName;
         this.productId = productId;
         this.batchId = batchId;
@@ -41,30 +35,6 @@ public class Product implements Parcelable{
         }
 
     };
-
-    public String getQrAddress() {
-        return qrAddress;
-    }
-
-    public void setQrAddress(String qrAddress) {
-        this.qrAddress = qrAddress;
-    }
-
-    public String getQrPubKey() {
-        return qrPubKey;
-    }
-
-    public void setQrPubKey(String qrPubKey) {
-        this.qrPubKey = qrPubKey;
-    }
-
-    public String getProducerAddr() {
-        return producerAddr;
-    }
-
-    public void setProducerAddr(String producerAddr) {
-        this.producerAddr = producerAddr;
-    }
 
     public String getProductName() {
         return productName;
@@ -97,18 +67,12 @@ public class Product implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.qrAddress);
-        parcel.writeString(this.qrPubKey);
-        parcel.writeString(this.producerAddr);
         parcel.writeString(this.productName);
         parcel.writeString(this.productId);
         parcel.writeString(this.batchId);
     }
 
     public void readFromParcel(Parcel in) {
-        qrAddress = in.readString();
-        qrPubKey = in.readString();
-        producerAddr = in.readString();
         productName = in.readString();
         productId = in.readString();
         batchId = in.readString();

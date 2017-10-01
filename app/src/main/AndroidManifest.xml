@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".ScanActivity" />
         <activity android:name=".QueryServerActivity" />
-        <activity android:name=".InformationActivity"></activity>
+        <activity android:name=".InformationActivity" />
+        <activity android:name=".AcknowledgementsActivity"></activity>
     </application>
 
 </manifest>
