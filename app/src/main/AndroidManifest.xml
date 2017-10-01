@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ScanActivity" />
-        <activity android:name=".QueryBlockchainActivity" />
+        <activity android:name=".QueryServerActivity" />
         <activity android:name=".InformationActivity"></activity>
     </application>
 
