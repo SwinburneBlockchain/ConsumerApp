@@ -31,6 +31,8 @@ public class ScanActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
+        // TODO If null back was pressed and display error
+
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         JsonObject returnedJsonObject = stringToJsonObject(scanningResult.getContents().toString());
 
@@ -89,15 +91,6 @@ public class ScanActivity extends AppCompatActivity {
         Intent i = new Intent(ScanActivity.this, QueryServerActivity.class);
         i.putExtra("scan", s);
 
-        startActivity(i);
-    }
-
-    /**
-     * On back pressed sends the user to the main activity to prevent unexpected results
-     */
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(ScanActivity.this, MainActivity.class);
         startActivity(i);
     }
 

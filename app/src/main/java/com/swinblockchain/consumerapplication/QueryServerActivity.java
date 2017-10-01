@@ -82,7 +82,7 @@ public class QueryServerActivity extends AppCompatActivity {
                         for (JsonObject p : jsonProducer) {
                             // Each producer information
                             String producerName = p.getString("producerName", "producerNameError");
-                            String producerTimestamp = p.getString("timestamp", "timestampError");
+                            int producerTimestamp = p.getInt("timestamp", 0);
                             String producerLocation = p.getString("producerLocation", "producerLocationError");
 
                             prodArrayList.add(new Producer(producerName, producerTimestamp, producerLocation));
@@ -119,14 +119,12 @@ public class QueryServerActivity extends AppCompatActivity {
     }
 
     private JsonObject createJsonProduct(String response) {
-        String cleanedResponse = response.substring(1, response.length()-1);
-        String[] cleanedResponseArr = cleanedResponse.split("|");
+        String[] cleanedResponseArr = response.split("\\|");
         return stringToJsonObject(cleanedResponseArr[0]);
     }
 
     private ArrayList<JsonObject> createJsonProducer(String response) {
-        String cleanedResponse = response.substring(1, response.length()-1);
-        String[] cleanedResponseArr = cleanedResponse.split("|");
+        String[] cleanedResponseArr = response.split("\\|");
         ArrayList<JsonObject> jsonProducers = new ArrayList<>();
 
         for (int i = 2; i < cleanedResponseArr.length; i++) {
@@ -136,12 +134,11 @@ public class QueryServerActivity extends AppCompatActivity {
     }
 
     private boolean checkValid(String response) {
-        String cleanedResponse = response.substring(1, response.length()-1);
-        String[] cleanedResponseArr = cleanedResponse.split("|");
+        String[] cleanedResponseArr = response.split("\\|");
         JsonObject json = stringToJsonObject(cleanedResponseArr[1]);
 
         try {
-            String blockchainAcc = json.getString("address", "addressError");
+            String blockchainAcc = json.getString("actionAddress", "actionAddressError");
             String validMessage = json.getString("action", "actionError");
 
             if (blockchainAcc.equals(BLOCKCHAIN_ACC) && validMessage.equals(VALID_MESSAGE)) {
@@ -152,6 +149,7 @@ public class QueryServerActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             startError("The product/producer information is not valid.\nError Code: Blockchain account address incorrect or invalidated.");
+            e.printStackTrace();
             return false;
         }
     }

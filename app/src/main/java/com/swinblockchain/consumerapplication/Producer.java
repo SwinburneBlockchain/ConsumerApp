@@ -9,10 +9,10 @@ import android.os.Parcelable;
 
 public class Producer implements Parcelable{
     String producerName;
-    String producerTimestamp;
+    int producerTimestamp;
     String producerLocation;
 
-    public Producer(String producerName, String producerTimestamp, String producerLocation) {
+    public Producer(String producerName, int producerTimestamp, String producerLocation) {
         this.producerName = producerName;
         this.producerTimestamp = producerTimestamp;
         this.producerLocation = producerLocation;
@@ -43,11 +43,11 @@ public class Producer implements Parcelable{
         this.producerName = producerName;
     }
 
-    public String getProducerTimestamp() {
+    public int getProducerTimestamp() {
         return producerTimestamp;
     }
 
-    public void setProducerTimestamp(String producerTimestamp) {
+    public void setProducerTimestamp(int producerTimestamp) {
         this.producerTimestamp = producerTimestamp;
     }
 
@@ -67,13 +67,13 @@ public class Producer implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.producerName);
-        parcel.writeString(this.producerTimestamp);
+        parcel.writeInt(this.producerTimestamp);
         parcel.writeString(this.producerLocation);
     }
 
     public void readFromParcel(Parcel in) {
        producerName = in.readString();
-       producerTimestamp = in.readString();
+       producerTimestamp = in.readInt();
        producerLocation = in.readString();
     }
 }
