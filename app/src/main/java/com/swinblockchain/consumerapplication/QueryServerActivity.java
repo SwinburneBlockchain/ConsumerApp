@@ -62,10 +62,18 @@ public class QueryServerActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                 
+                JsonObject jsonProduct = null;
+                ArrayList<JsonObject> jsonProducer = null;
+
                 if (checkValid(response)) {
-                    JsonObject jsonProduct = createJsonProduct(response);
-                    ArrayList<JsonObject> jsonProducer = createJsonProducer(response);
+
+                    try {
+                        jsonProduct = createJsonProduct(response);
+                        jsonProducer = createJsonProducer(response);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        startError("The product contains empty or invalid data.\nError Code: Could not create Json objects due to invalid data. " + e.toString());
+                    }
 
                     try {
                         // May not be required
@@ -93,8 +101,10 @@ public class QueryServerActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        startError("The returned data from the server is invalid.\nError Code: Data returned from server is in an unexpected form.");
+                        startError("The returned data from the server is invalid.\nError Code: Data returned from server is in an unexpected form. " + e.toString());
                     }
+                } else {
+                    startError("The scanned product has not been verified by the blockchain.\nError Code: Product not verified in blockchain");
                 }
 
             }
