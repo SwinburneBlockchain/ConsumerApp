@@ -116,4 +116,14 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * On back pressed sends the user to the main activity to prevent unexpected results
+     */
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(AcknowledgementsActivity.this, MainActivity.class);
+        startActivity(i);
+    }
+
+
 }
