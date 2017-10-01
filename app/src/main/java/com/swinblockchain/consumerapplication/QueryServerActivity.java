@@ -5,6 +5,7 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -31,7 +32,7 @@ public class QueryServerActivity extends AppCompatActivity {
     Scan s;
     ArrayList<Producer> prodArrayList = new ArrayList<>();
 
-    private final String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo";
+    //private final String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo" + s.getAccAddr();
     private final String BLOCKCHAIN_ACC = "NXT-HP3G-T95S-6W2D-AEPHE";
     private final String VALID_MESSAGE = "VALIDATE";
 
@@ -56,12 +57,14 @@ public class QueryServerActivity extends AppCompatActivity {
      */
     private void makeRequest() {
         RequestQueue queue = Volley.newRequestQueue(QueryServerActivity.this);
+        String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo/" + s.getAccAddr();
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
+
                 if (checkValid(response)) {
                     JsonObject jsonProduct = createJsonProduct(response);
                     ArrayList<JsonObject> jsonProducer = createJsonProducer(response);
@@ -82,7 +85,7 @@ public class QueryServerActivity extends AppCompatActivity {
                         for (JsonObject p : jsonProducer) {
                             // Each producer information
                             String producerName = p.getString("producerName", "producerNameError");
-                            int producerTimestamp = p.getInt("timestamp", 0);
+                            double producerTimestamp = p.getDouble("timestamp", 0);
                             String producerLocation = p.getString("producerLocation", "producerLocationError");
 
                             prodArrayList.add(new Producer(producerName, producerTimestamp, producerLocation));
@@ -108,13 +111,16 @@ public class QueryServerActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("accAddr", s.getAccAddr());
+                //params.put("accAddr", s.getAccAddr());
                 System.out.println("Parameters: " + params);
                 return params;
             }
         };
         // Add the request to the RequestQueue.
-        System.out.print(stringRequest);
+        System.out.print("Stringgggg " + stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        System.out.println("defaulttime: " + DefaultRetryPolicy.DEFAULT_TIMEOUT_MS);
         queue.add(stringRequest);
     }
 
@@ -156,7 +162,6 @@ public class QueryServerActivity extends AppCompatActivity {
 
     private void displayProductInformation(Product newProduct, ArrayList<Producer> producerList) {
         Intent i = new Intent(QueryServerActivity.this, InformationActivity.class);
-
         i.putExtra("product", newProduct);
         i.putParcelableArrayListExtra("prodArrayList", producerList);
         startActivity(i);

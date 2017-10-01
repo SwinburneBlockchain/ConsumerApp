@@ -23,7 +23,7 @@ public class AcknowledgementsActivity extends AppCompatActivity {
     private final String ACK_FILE = "ack.csv";
     private TableLayout mainTableLayout;
 
-    private final String AUTHOR = "Consumer Application for swinblockchain built by John Humphrys - 2017\nhttps://github.com/SwinburneBlockchain/\njohn.humphrys@protonmail.com";
+    private final String AUTHOR = "Consumer Application for swinblockchain\nBuilt by John Humphrys - 2017\nhttps://github.com/SwinburneBlockchain/\njohn.humphrys@protonmail.com";
     private final Uri github = Uri.parse("https://github.com/SwinburneBlockchain/");
 
     @Override
