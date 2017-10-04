@@ -125,10 +125,7 @@ public class QueryServerActivity extends AppCompatActivity {
             }
         };
         // Add the request to the RequestQueue.
-        System.out.print("Stringgggg " + stringRequest);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        System.out.println("defaulttime: " + DefaultRetryPolicy.DEFAULT_TIMEOUT_MS);
         queue.add(stringRequest);
     }
 
@@ -141,7 +138,7 @@ public class QueryServerActivity extends AppCompatActivity {
         String[] cleanedResponseArr = response.split("\\|");
         ArrayList<JsonObject> jsonProducers = new ArrayList<>();
 
-        for (int i = 2; i < cleanedResponseArr.length; i++) {
+        for (int i = 1; i < cleanedResponseArr.length; i++) {
             jsonProducers.add(stringToJsonObject(cleanedResponseArr[i]));
         }
         return jsonProducers;
