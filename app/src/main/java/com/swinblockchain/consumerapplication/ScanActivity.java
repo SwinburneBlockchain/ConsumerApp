@@ -10,6 +10,8 @@ import com.eclipsesource.json.JsonValue;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import static android.R.attr.type;
+
 public class ScanActivity extends AppCompatActivity {
 
     @Override
@@ -34,15 +36,18 @@ public class ScanActivity extends AppCompatActivity {
         // TODO If null back was pressed and display error
 
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        JsonObject returnedJsonObject = stringToJsonObject(scanningResult.getContents().toString());
-
+        JsonObject returnedJsonObject = null;
         try {
-            String accAddr = returnedJsonObject.getString("accAddr", "accAddrError");
-            String pubKey = returnedJsonObject.getString("pubKey", "pubKeyError");
-            String privKey = returnedJsonObject.getString("privKey", "privKeyError");
+            if (scanningResult.getContents() == null) {
+                onBackPressed();
+            } else {
+                returnedJsonObject = stringToJsonObject(scanningResult.getContents().toString());
+                String accAddr = returnedJsonObject.getString("accAddr", "accAddrError");
+                String pubKey = returnedJsonObject.getString("pubKey", "pubKeyError");
+                String privKey = returnedJsonObject.getString("privKey", "privKeyError");
 
-            changeActivity(new Scan(accAddr, pubKey, privKey));
-
+                changeActivity(new Scan(accAddr, pubKey, privKey));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             startError("The scanned QR code is not valid.\nError Code: Cannot convert JSON to required objects");
