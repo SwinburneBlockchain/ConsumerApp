@@ -4,15 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by john on 1/10/17.
+ * Used to hold information about a Product
+ *
+ * @author John Humphrys
  */
-
-public class Product implements Parcelable{
+public class Product implements Parcelable {
 
     String productName;
     String productId;
     String batchId;
 
+    /**
+     * Main constructor
+     *
+     * @param productName products name
+     * @param productId products id
+     * @param batchId products batch id
+     */
     public Product(String productName, String productId, String batchId) {
         this.productName = productName;
         this.productId = productId;

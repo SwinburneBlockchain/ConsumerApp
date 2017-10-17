@@ -12,6 +12,9 @@ import com.google.zxing.integration.android.IntentResult;
 
 import static android.R.attr.type;
 
+/**
+ * Scan activity is used to scan a qr code and get a response
+ */
 public class ScanActivity extends AppCompatActivity {
 
     @Override
@@ -32,9 +35,6 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
-        // TODO If null back was pressed and display error
-
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         JsonObject returnedJsonObject = null;
         try {
@@ -54,6 +54,12 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Converts a string to json object
+     *
+     * @param stringToJson the string to convert
+     * @return The jsonobject
+     */
     private JsonObject stringToJsonObject(String stringToJson) {
         JsonValue jsonResponse;
 
@@ -71,6 +77,11 @@ public class ScanActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * displays a message to the user and sends them back to the main menu
+     *
+     * @param errorMessage The error message to display
+     */
     private void startError(String errorMessage) {
         Intent i = new Intent(ScanActivity.this, MainActivity.class);
         i.putExtra("errorMessage", errorMessage);
@@ -86,12 +97,13 @@ public class ScanActivity extends AppCompatActivity {
         // Display message is Scanner application is not installed on the device
         scan.setMessage("Scanner needs to be downloaded in order to use this application.");
         scan.initiateScan();
-
-        // Currently testing variables
-        //accNo = "NXT-HP3G-T95S-6W2D-AEPHE";
-        //batchID = "001";
     }
 
+    /**
+     * Used to change activities
+     *
+     * @param s The scan to pass to the next activity
+     */
     private void changeActivity(Scan s) {
         Intent i = new Intent(ScanActivity.this, QueryServerActivity.class);
         i.putExtra("scan", s);

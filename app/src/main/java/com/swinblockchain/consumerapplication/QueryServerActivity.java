@@ -25,7 +25,8 @@ import java.util.Map;
 import static android.R.id.list;
 
 /**
- * Class is used to query the blockchain and return the response.
+ * Class is used to query the caching server and return the response.
+ * @author John Humphrys
  */
 public class QueryServerActivity extends AppCompatActivity {
 
@@ -44,6 +45,9 @@ public class QueryServerActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Get intent and start request
+     */
     private void init() {
         s = getIntent().getParcelableExtra("scan");
         makeRequest();
@@ -64,6 +68,7 @@ public class QueryServerActivity extends AppCompatActivity {
                 JsonObject jsonProduct = null;
                 ArrayList<JsonObject> jsonProducer = null;
 
+                // If response valid get data
                 if (checkValid(response)) {
 
                     try {
@@ -123,16 +128,29 @@ public class QueryServerActivity extends AppCompatActivity {
                 return params;
             }
         };
+
         // Add the request to the RequestQueue.
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
+    /**
+     * Used to create json product from string
+     *
+     * @param response The string to convert
+     * @return The jsonObject
+     */
     private JsonObject createJsonProduct(String response) {
         String[] cleanedResponseArr = response.split("\\|");
         return stringToJsonObject(cleanedResponseArr[0]);
     }
 
+    /**
+     * Used to create a json producer from string
+     *
+     * @param response The string to convert
+     * @return The jsonObject
+     */
     private ArrayList<JsonObject> createJsonProducer(String response) {
         String[] cleanedResponseArr = response.split("\\|");
         ArrayList<JsonObject> jsonProducers = new ArrayList<>();
@@ -143,6 +161,12 @@ public class QueryServerActivity extends AppCompatActivity {
         return jsonProducers;
     }
 
+    /**
+     * Checks to see if the response is valid
+     *
+     * @param response The recieved response is valid
+     * @return boolean based on result
+     */
     private boolean checkValid(String response) {
         String[] cleanedResponseArr = response.split("\\|");
         JsonObject json = stringToJsonObject(cleanedResponseArr[1]);
@@ -164,6 +188,12 @@ public class QueryServerActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moves to the display information activity screen
+     *
+     * @param newProduct The product to display
+     * @param producerList An arraylist of the producers who made a transaction with the product
+     */
     private void displayProductInformation(Product newProduct, ArrayList<Producer> producerList) {
         Intent i = new Intent(QueryServerActivity.this, InformationActivity.class);
         i.putExtra("product", newProduct);
@@ -171,12 +201,23 @@ public class QueryServerActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    /**
+     * Displays an error message and sends the user back to the main menu
+     *
+     * @param errorMessage The message to display
+     */
     private void startError(String errorMessage) {
         Intent i = new Intent(QueryServerActivity.this, MainActivity.class);
         i.putExtra("errorMessage", errorMessage);
         startActivity(i);
     }
 
+    /**
+     * Used to convery a string into a json object
+     *
+     * @param stringToJson The string to convert
+     * @return The jsonobject
+     */
     private JsonObject stringToJsonObject(String stringToJson) {
         JsonValue jsonResponse;
 

@@ -4,18 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * The
+ * The producer contains all information about a single producer
+ *
+ *  @author John Humphrys
  */
 public class Producer implements Parcelable {
     String producerName;
     double producerTimestamp;
     String producerLocation;
 
+    /**
+     * Main constructor
+     *
+     * @param producerName
+     * @param producerTimestamp
+     * @param producerLocation
+     */
     public Producer(String producerName, double producerTimestamp, String producerLocation) {
         this.producerName = producerName;
         this.producerTimestamp = producerTimestamp;
         this.producerLocation = producerLocation;
     }
+
 
     public Producer(Parcel in) {
         super();
