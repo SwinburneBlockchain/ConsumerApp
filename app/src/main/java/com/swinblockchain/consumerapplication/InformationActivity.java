@@ -10,8 +10,18 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * InformationActivity displays all information recieved from the caching server about a product
+ *
+ * @author John Humphrys
+ */
 public class InformationActivity extends AppCompatActivity {
 
+    /**
+     * Run when activity is created
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,13 +30,23 @@ public class InformationActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Initalise variables
+     */
     private void init() {
         Product product = getIntent().getParcelableExtra("product");
-        ArrayList <Producer> prodArrayList = (ArrayList<Producer>) getIntent().getSerializableExtra("prodArrayList");
+        ArrayList<Producer> prodArrayList = (ArrayList<Producer>) getIntent().getSerializableExtra("prodArrayList");
 
+        // Display product information
         displayProductInformation(product, prodArrayList);
     }
 
+    /**
+     * Displays all the product information
+     *
+     * @param product       The product information to display
+     * @param prodArrayList A collection of all producers who moved the product
+     */
     private void displayProductInformation(Product product, ArrayList<Producer> prodArrayList) {
         // Draw the top, main window
         TextView productName = (TextView) findViewById(R.id.productName);
@@ -43,25 +63,32 @@ public class InformationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adds a gap between each producer
+     */
     private void createTableRowFinal() {
         final TableLayout detailsTable = (TableLayout) findViewById(R.id.mainTableLayout);
         final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerowbottom, null);
         detailsTable.addView(tableRow);
     }
 
+    /**
+     * Creates a table row for each producer
+     *
+     * @param p The producer to make the row for
+     */
     private void createTableRow(Producer p) {
+        final TableLayout detailsTable = (TableLayout) findViewById(R.id.mainTableLayout);
+        final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerow, null);
+        TextView tv;
 
-            final TableLayout detailsTable = (TableLayout) findViewById(R.id.mainTableLayout);
-            final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerow, null);
-            TextView tv;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        tv = (TextView) tableRow.findViewById(R.id.informationCell);
+        tv.setText("Date: " + sdf.format(p.getProducerTimestamp()) + "\n" + "Registered by: " + p.getProducerName() + "\n" + "Location: " + p.getProducerLocation());
 
-            tv = (TextView) tableRow.findViewById(R.id.informationCell);
-            tv.setText("Date: " + sdf.format(p.getProducerTimestamp()) + "\n" + "Registered by: " + p.getProducerName() + "\n" + "Location: " + p.getProducerLocation());
-
-            //Add row to the table
-            detailsTable.addView(tableRow);
+        //Add row to the table
+        detailsTable.addView(tableRow);
     }
 
 

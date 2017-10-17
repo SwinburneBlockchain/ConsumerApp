@@ -4,10 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by john on 1/10/17.
+ * The
  */
-
-public class Producer implements Parcelable{
+public class Producer implements Parcelable {
     String producerName;
     double producerTimestamp;
     String producerLocation;
@@ -71,8 +70,8 @@ public class Producer implements Parcelable{
     }
 
     public void readFromParcel(Parcel in) {
-       producerName = in.readString();
-       producerTimestamp = in.readDouble();
-       producerLocation = in.readString();
+        producerName = in.readString();
+        producerTimestamp = in.readDouble();
+        producerLocation = in.readString();
     }
 }

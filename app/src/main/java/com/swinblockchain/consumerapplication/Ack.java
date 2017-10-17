@@ -1,9 +1,10 @@
 package com.swinblockchain.consumerapplication;
 
 /**
- * Created by john on 1/10/17.
+ * An Ack object holds all information about an acknowledgement of library or source code used, with a link to the project
+ *
+ * @author John Humphrys
  */
-
 public class Ack {
     String title;
     String url;

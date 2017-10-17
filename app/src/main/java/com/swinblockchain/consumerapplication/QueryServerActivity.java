@@ -32,7 +32,7 @@ public class QueryServerActivity extends AppCompatActivity {
     Scan s;
     ArrayList<Producer> prodArrayList = new ArrayList<>();
 
-    //private final String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo" + s.getAccAddr();
+    private final String cachingServer = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo/";
     private final String BLOCKCHAIN_ACC = "NXT-HP3G-T95S-6W2D-AEPHE";
     private final String VALID_MESSAGE = "VALIDATE";
 
@@ -55,10 +55,9 @@ public class QueryServerActivity extends AppCompatActivity {
      */
     private void makeRequest() {
         RequestQueue queue = Volley.newRequestQueue(QueryServerActivity.this);
-        String URL = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo/" + s.getAccAddr();
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, cachingServer + s.getAccAddr(), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

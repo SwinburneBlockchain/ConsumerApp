@@ -7,19 +7,39 @@ import android.view.View;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 
+/**
+ * The main activity is displayed to the user when the application starts up
+ *
+ * @author John Humphrys
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Called when the activity is created
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Starts the ScanActivity ativity
+     *
+     * @param view
+     */
     public void scanProduct(View view) {
         Intent i = new Intent(MainActivity.this, ScanActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Starts the AcknowledgementsActivity activity
+     *
+     * @param view
+     */
     public void displayAck(View view) {
         Intent i = new Intent(MainActivity.this, AcknowledgementsActivity.class);
         startActivity(i);
@@ -30,6 +50,6 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-
+        // Do nothing
     }
 }

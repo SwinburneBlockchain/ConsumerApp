@@ -17,13 +17,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * The acknowledgement activity displays all acknowledgements
+ *
+ * @author John Humphrys
+ */
 public class AcknowledgementsActivity extends AppCompatActivity {
 
     ArrayList<Ack> ackList = new ArrayList<>();
     private final String ACK_FILE = "ack.csv";
     private TableLayout mainTableLayout;
 
-    private final String AUTHOR = "Consumer Application for swinblockchain\nBuilt by John Humphrys - 2017\nhttps://github.com/SwinburneBlockchain/\njohn.humphrys@protonmail.com";
+    private final String AUTHOR = "Consumer Application for ProductChain\n\nhttps://github.com/SwinburneBlockchain/\n";
     private final Uri github = Uri.parse("https://github.com/SwinburneBlockchain/");
 
     @Override
@@ -34,18 +39,25 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Initalise activity
+     */
     private void init() {
         mainTableLayout = (TableLayout) findViewById(R.id.mainTableLayout);
         TextView author = (TextView) findViewById(R.id.author);
         author.setText(AUTHOR);
 
+        // Load acks from file
         loadAcks();
     }
 
+    /**
+     * Loads all acknowledgements from file into table
+     */
     public void loadAcks() {
         try {
             AssetManager assetManager = getAssets();
-            InputStream inputStream = assetManager.open("ack.csv");
+            InputStream inputStream = assetManager.open(ACK_FILE);
 
             CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream));
             String[] nextLine;
@@ -59,16 +71,26 @@ public class AcknowledgementsActivity extends AppCompatActivity {
 
             displayLocationInformation(ackList);
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Displays the link to the projects location
+     *
+     * @param view The activity view
+     */
     public void displayGithub(View view) {
         Intent i = new Intent(Intent.ACTION_VIEW, github);
         startActivity(i);
     }
 
+    /**
+     * Creates each table row
+     *
+     * @param ackData The arraylist containing the acks
+     */
     private void displayLocationInformation(ArrayList<Ack> ackData) {
 
         // Draw a new column for each location
@@ -79,11 +101,19 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the gap table row
+     */
     private void createTableRowFinal() {
         final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerowgap, null);
         mainTableLayout.addView(tableRow);
     }
 
+    /**
+     * Creates a new table row
+     *
+     * @param a The ack to use when creating table row
+     */
     private void createTableRow(Ack a) {
         final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.tablerowack, null);
         final TextView tv;
@@ -91,7 +121,8 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         tv = (TextView) tableRow.findViewById(R.id.informationCell);
         tv.setText(a.getTitle());
 
-        tableRow.setOnClickListener(new View.OnClickListener(){
+        // Add onclick listener to github link
+        tableRow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Uri ackUri = findAckUri(tv.getText().toString().substring(2));
@@ -103,10 +134,14 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         });
 
         mainTableLayout.addView(tableRow);
-        //
-        //startActivity(i);
     }
 
+    /**
+     * Finds the URI for the ack requested
+     *
+     * @param ackTitle The name of the ack to search for
+     * @return The URI associated with the ack name
+     */
     private Uri findAckUri(String ackTitle) {
         for (Ack a : ackList) {
             if (a.getTitle().equals(ackTitle)) {
@@ -124,6 +159,4 @@ public class AcknowledgementsActivity extends AppCompatActivity {
         Intent i = new Intent(AcknowledgementsActivity.this, MainActivity.class);
         startActivity(i);
     }
-
-
 }
