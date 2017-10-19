@@ -1,13 +1,11 @@
 package com.swinblockchain.consumerapplication;
 
 import android.content.Intent;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -22,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.R.id.list;
-
 /**
  * Class is used to query the caching server and return the response.
  * @author John Humphrys
@@ -33,8 +29,8 @@ public class QueryServerActivity extends AppCompatActivity {
     Scan s;
     ArrayList<Producer> prodArrayList = new ArrayList<>();
 
-    private final String cachingServer = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/productInfo/";
-    private final String BLOCKCHAIN_ACC = "NXT-HP3G-T95S-6W2D-AEPHE";
+    private final String CACHING_SERVER = "http://ec2-54-153-202-123.ap-southeast-2.compute.amazonaws.com:3000/";
+    private final String VALIDATE_ACCOUNT = "NXT-HP3G-T95S-6W2D-AEPHE";
     private final String VALID_MESSAGE = "VALIDATE";
 
     @Override
@@ -61,7 +57,7 @@ public class QueryServerActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(QueryServerActivity.this);
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, cachingServer + s.getAccAddr(), new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, CACHING_SERVER + "productInfo/" + s.getAccAddr(), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -175,7 +171,7 @@ public class QueryServerActivity extends AppCompatActivity {
             String blockchainAcc = json.getString("actionAddress", "actionAddressError");
             String validMessage = json.getString("action", "actionError");
 
-            if (blockchainAcc.equals(BLOCKCHAIN_ACC) && validMessage.equals(VALID_MESSAGE)) {
+            if (blockchainAcc.equals(VALIDATE_ACCOUNT) && validMessage.equals(VALID_MESSAGE)) {
                 return true;
             } else {
                 startError("The product/producer information is not valid.\nError Code: Blockchain account address incorrect or invalidated.");
