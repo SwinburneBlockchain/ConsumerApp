@@ -1,5 +1,11 @@
 package com.swinblockchain.consumerapplication;
 
+/*
+  Swinburne Capstone Project - ICT90004
+  Aidan Beale & John Humphrys
+  https://github.com/SwinburneBlockchain
+*/
+  
 /**
  * An Ack object holds all information about an acknowledgement of library or source code used, with a link to the project
  *

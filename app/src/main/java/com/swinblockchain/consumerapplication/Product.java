@@ -2,7 +2,12 @@ package com.swinblockchain.consumerapplication;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+/*
+  Swinburne Capstone Project - ICT90004
+  Aidan Beale & John Humphrys
+  https://github.com/SwinburneBlockchain
+*/
+  
 /**
  * Used to hold information about a Product
  *

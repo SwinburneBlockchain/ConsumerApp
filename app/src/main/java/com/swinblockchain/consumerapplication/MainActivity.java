@@ -6,7 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-
+/*
+  Swinburne Capstone Project - ICT90004
+  Aidan Beale & John Humphrys
+  https://github.com/SwinburneBlockchain
+*/
+  
 /**
  * The main activity is displayed to the user when the application starts up
  *
